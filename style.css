@@ -24,13 +24,13 @@ header > div {
     margin: 20px 0;
 }
 
-.table-headings a {
+header a {
     margin-left: 20px;
     text-decoration: none;
     color: white;
 }
 
-.table-headings a:hover {
+header a:hover {
     transition: 0.5s ease;
     color:  rgb(131, 182, 166);
 }
@@ -39,8 +39,9 @@ header > div.current-dir {
     justify-content: flex-end;
 }
 
-.current-dir h3 {
+.current-dir a {
     margin-right: 20px;
+    font-size: 20px;
 }
 
 div, table, h2 {

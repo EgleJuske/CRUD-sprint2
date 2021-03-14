@@ -24,20 +24,22 @@
     ?>
     <header>
         <div class="table-headings">
-            <a href="?path=projektai">Projektai</a>
-            <a href="?path=darbuotojai">Darbuotojai</a>
+            <a href="?path=projects">Projektai</a>
+            <a href="?path=employees">Darbuotojai</a>
         </div>
         <div class="current-dir">
-            <h3>Projekto valdymas</h3>
+            <a class="project-manager-link" href="?path=project-manager">Projekto valdymas</a>
         </div>
     </header>
     <?php echo $conn_msg; ?>
     <?php
     if (isset($_GET['path'])) {
-        if ($_GET['path'] == 'projektai') {
+        if ($_GET['path'] == 'projects') {
             include 'projects.php';
-        } else {
+        } else if ($_GET['path'] == 'employees') {
             include 'employees.php';
+        } else if ($_GET['path'] == 'project-manager') {
+            include 'project-manager.php';
         }
     }
     ?>

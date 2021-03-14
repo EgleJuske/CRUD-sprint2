@@ -1,5 +1,5 @@
 <?php
-$sql = "SELECT * FROM employees";
+$sql = "SELECT * FROM employees_projects";
 $result = mysqli_query($conn, $sql);
 ?>
 <h2>Darbuotojai</h2>
@@ -7,16 +7,16 @@ $result = mysqli_query($conn, $sql);
     <thead>
         <th>Id</th>
         <th>Vardas</th>
-        <th>Pavardė</th>
+        <th>Projektas</th>
     </thead>
     <tbody>
         <?php
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>
+                        <td>" . $row["id"] . "</td>
                         <td>" . $row["id_employees"] . "</td>
-                        <td>" . $row["firstname"] . "</td>
-                        <td>" . $row["lastname"] . "</td>
+                        <td>" . $row["id_projects"] . "</td>
                     </tr>";
             }
         }
