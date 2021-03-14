@@ -43,7 +43,7 @@ header > div.current-dir {
     margin-right: 20px;
 }
 
-div, table {
+div, table, h2 {
     margin-left: 20%;
     margin-top: 20px;
 }
