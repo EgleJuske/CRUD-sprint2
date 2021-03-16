@@ -1,13 +1,16 @@
 <?php
-$sql = "SELECT * FROM employees";
+$sql = "SELECT employees.id_employees, employees.firstname, projects.project_name FROM sprint2.employees
+LEFT JOIN projects ON employees.id_projects = projects.id_projects ORDER BY id_employees;";
 $result = mysqli_query($conn, $sql);
 ?>
 <h2>Darbuotojai</h2>
 <table>
     <thead>
-        <th>Id</th>
-        <th>Vardas</th>
-        <th>Pavardė</th>
+        <tr>
+            <th>Id</th>
+            <th>Vardas</th>
+            <th>Projektas</th>
+        </tr>
     </thead>
     <tbody>
         <?php
@@ -16,7 +19,7 @@ $result = mysqli_query($conn, $sql);
                 echo "<tr>
                         <td>" . $row["id_employees"] . "</td>
                         <td>" . $row["firstname"] . "</td>
-                        <td>" . $row["lastname"] . "</td>
+                        <td>" . $row["project_name"] . "</td>
                     </tr>";
             }
         }

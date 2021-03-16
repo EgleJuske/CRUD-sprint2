@@ -39,9 +39,8 @@ header > div.current-dir {
     justify-content: flex-end;
 }
 
-.current-dir a {
+h3 {
     margin-right: 20px;
-    font-size: 20px;
 }
 
 div, table, h2 {

@@ -28,7 +28,7 @@
             <a href="?path=employees">Darbuotojai</a>
         </div>
         <div class="current-dir">
-            <a class="project-manager-link" href="?path=project-manager">Projekto valdymas</a>
+            <h3>Projekto valdymas</h3>
         </div>
     </header>
     <?php echo $conn_msg; ?>
