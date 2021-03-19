@@ -36,12 +36,11 @@
     if (isset($_GET['path'])) {
         if ($_GET['path'] == 'projects') {
             include 'projects.php';
-        } else if ($_GET['path'] == 'employees') {
+        } else {
             include 'employees.php';
-        } else if ($_GET['path'] == 'project-manager') {
-            include 'project-manager.php';
         }
     }
+    mysqli_close($conn);
     ?>
 </body>
 
