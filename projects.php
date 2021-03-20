@@ -8,7 +8,7 @@ $result = mysqli_query($conn, $sql);
 // Add new project logic
 if (isset($_POST['add-project'])) {
     $stmt = $conn->prepare("INSERT INTO projects (`project_name`) VALUES (?)");
-    $stmt->bind_param("s", $_POST['new-project']);
+    $stmt->bind_param('s', $_POST['new-project']);
     $stmt->execute();
     header('Location: ?path=projects');
     die();
@@ -16,9 +16,17 @@ if (isset($_POST['add-project'])) {
 
 // Delete project logic
 if (isset($_POST['delete'])) {
-    echo 'delete set';
     $stmt = $conn->prepare("DELETE FROM projects WHERE id_projects = ?");
-    $stmt->bind_param("i", $_POST['delete']);
+    $stmt->bind_param('i', $_POST['delete']);
+    $stmt->execute();
+    header('Location: ?path=projects');
+    die();
+}
+
+// Update project logic
+if (isset($_POST['update-project'])) {
+    $stmt = $conn->prepare("UPDATE projects SET project_name = ? WHERE id_projects = ?");
+    $stmt->bind_param('si', $_POST['project-name'], $_POST['update-project']);
     $stmt->execute();
     header('Location: ?path=projects');
     die();
@@ -45,8 +53,11 @@ if (isset($_POST['delete'])) {
                         <td>' . $row["names"] . '</td>
                         <td>
                             <form action="" method="POST">
-                                <button type="submit" class="btn btn-delete" name="delete" value="' . $row["id_projects"] . '">Delete</button>
+                                <button type="submit" class="btn btn-delete" name="delete" value="' . $row["id_projects"] . '">Ištrinti</button>
                             </form>
+                            <form action="" method="POST">
+                            <button type="submit" class="btn btn-update" name="update" value="' . $row["id_projects"] . '">Redaguoti</button>
+                        </form>
                         </td>
                     </tr>';
             }
@@ -57,5 +68,24 @@ if (isset($_POST['delete'])) {
 
 <form class="add-form" action="" method="POST">
     <input type="text" name='new-project'><br>
-    <button type="submit" class="btn btn-add" name="add-project" value="add-project">Add project</button>
+    <button type="submit" class="btn btn-add" name="add-project" value="add-project">Pridėti projektą</button>
 </form>
+
+<?php
+if (isset($_POST['update'])) {
+    $id = $_POST['update'];
+    $result = mysqli_query($conn, "SELECT * FROM projects WHERE id_projects = $id");
+
+    // TODO: generate prepare statement
+
+    if (mysqli_num_rows($result) > 0) {
+        $row = $result->fetch_array();
+        $project_name = $row['project_name'];
+    }
+    echo '<form class="update-form" action="" method="POST">
+                <input type="number" name="id-projects" value="' . $id . '"><br>
+                <input type="text" name="project-name" value="' . $project_name . '"><br>
+                <button type="submit" class="btn btn-update" name="update-project" value="' . $_POST['update'] . '">Atnaujinti duomenis</button>
+            </form>';
+}
+?>

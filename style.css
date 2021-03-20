@@ -68,7 +68,8 @@ td {
 	padding: 10px 10px;
 }
 
-form.add-form {
+form.add-form,
+form.update-form {
 	margin-left: 20%;
 	margin-top: 20px;
 }
