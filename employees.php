@@ -41,7 +41,7 @@ if (isset($_POST['update-employee'])) {
 <table>
     <thead>
         <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Vardas</th>
             <th>Projektas</th>
             <th>Veiksmai</th>
@@ -58,9 +58,7 @@ if (isset($_POST['update-employee'])) {
                         <td>
                             <form action="" method="POST">
                                 <button type="submit" class="btn btn-delete" name="delete" value="' . $row["id_employees"] . '">Ištrinti</button>
-                            </form>
-                            <form action="" method="POST">
-                            <button type="submit" class="btn btn-update" name="update" value="' . $row["id_employees"] . '">Redaguoti</button>
+                                <button type="submit" class="btn btn-update" name="update" value="' . $row["id_employees"] . '">Redaguoti</button>
                         </form>
                         </td>
                     </tr>';
@@ -71,8 +69,8 @@ if (isset($_POST['update-employee'])) {
 </table>
 
 <form class="add-form" action="" method="POST">
-    <input type="text" name="new-employee"><br>
-    <button type="submit" class="btn btn-add" name="add-employee" value="add-employee">Pridėti darbuotoją</button>
+    <input type="text" name="new-employee" placeholder="Darbuotojo vardas"><br>
+    <button type="submit" class="btn btn-submit" name="add-employee" value="add-employee">Pridėti darbuotoją</button>
 </form>
 
 <?php
@@ -89,8 +87,8 @@ if (isset($_POST['update'])) {
         $id_proj = $row['id_projects'];
     }
     echo '<form class="update-form" action="" method="POST">
-                <input type="number" name="id-employees" value="' . $id_empl . '"><br>
-                <input type="text" name="employee-name" value="' . $firstname . '"><br>
+                <label for="empl-name">Darbuotojo ID: ' . $id_empl . '</label><br>
+                <input type="text" id="empl-name" name="employee-name" value="' . $firstname . '">
                 <select name="id-project">';
 
     $sql_update_proj = "SELECT * FROM projects";
@@ -109,8 +107,8 @@ if (isset($_POST['update'])) {
         }
     }
     // $selected = empty($selected) ? 'selected' : '';
-    echo '</select>
-            <button type="submit" class="btn btn-update" name="update-employee" value="' . $id_empl . '">Atnaujinti duomenis</button>
+    echo '</select><br>
+            <button type="submit" class="btn btn-submit" name="update-employee" value="' . $id_empl . '">Atnaujinti duomenis</button>
             </form>';
 }
 ?>
