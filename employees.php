@@ -34,6 +34,7 @@ if (isset($_POST['update-employee'])) {
         $stmt->bind_param('sii', $_POST['employee-name'], $_POST['id-project'], $_POST['update-employee']);
         $stmt->execute();
         header('Location: ?path=employees');
+        die();
     }
 }
 ?>
@@ -76,11 +77,13 @@ if (isset($_POST['update-employee'])) {
 <?php
 if (isset($_POST['update'])) {
     $id_empl = $_POST['update'];
-    $sql_update = "SELECT * FROM employees WHERE id_employees = $id_empl";
 
-    // TODO: generate prepare statement
+    $stmt = $conn->prepare("SELECT * FROM employees WHERE id_employees = ?");
+    $stmt->bind_param('i', $id_empl);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
 
-    $result = mysqli_query($conn, $sql_update);
     if (mysqli_num_rows($result) > 0) {
         $row = $result->fetch_array();
         $firstname = $row['firstname'];
@@ -91,11 +94,12 @@ if (isset($_POST['update'])) {
                 <input type="text" id="empl-name" name="employee-name" value="' . $firstname . '">
                 <select name="id-project">';
 
-    $sql_update_proj = "SELECT * FROM projects";
+    $stmt = $conn->prepare("SELECT * FROM projects");
+    $stmt->bind_param();
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
 
-    // TODO: generate prepare statement
-
-    $result = mysqli_query($conn, $sql_update_proj);
     if (mysqli_num_rows($result) > 0) {
         echo '<option value="unlink"></option>';
         while ($row = mysqli_fetch_assoc($result)) {
@@ -106,7 +110,6 @@ if (isset($_POST['update'])) {
             echo '<option value="' . $row['id_projects'] . '"' . $selected . '>' . $row['project_name'] . '</option>';
         }
     }
-    // $selected = empty($selected) ? 'selected' : '';
     echo '</select><br>
             <button type="submit" class="btn btn-submit" name="update-employee" value="' . $id_empl . '">Atnaujinti duomenis</button>
             </form>';

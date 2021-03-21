@@ -72,18 +72,20 @@ if (isset($_POST['update-project'])) {
 <?php
 if (isset($_POST['update'])) {
     $id = $_POST['update'];
-    $result = mysqli_query($conn, "SELECT * FROM projects WHERE id_projects = $id");
-
-    // TODO: generate prepare statement
-
+    $stmt = $conn->prepare("SELECT * FROM projects WHERE id_projects = ?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
     if (mysqli_num_rows($result) > 0) {
         $row = $result->fetch_array();
         $project_name = $row['project_name'];
     }
+
     echo '<form class="update-form" action="" method="POST">
                 <label for="pr-name">Projekto ID: ' . $id . '</label><br>
                 <input type="text" id="pr-name" name="project-name" value="' . $project_name . '"><br>
-                <button type="submit" class="btn btn-submit" name="update-project" value="' . $_POST['update'] . '">Atnaujinti duomenis</button>
+                <button type="submit" class="btn btn-submit" name="update-project" value="' . $id . '">Atnaujinti duomenis</button>
             </form>';
 }
 ?>
