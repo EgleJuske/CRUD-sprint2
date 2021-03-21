@@ -2,14 +2,19 @@
 $sql = "SELECT employees.id_employees, employees.firstname, projects.project_name FROM employees
 LEFT JOIN projects ON employees.id_projects = projects.id_projects ORDER BY id_employees";
 $result = mysqli_query($conn, $sql);
+$msg = '';
 
 // Add new employee logic
 if (isset($_POST['add-employee'])) {
-    $stmt = $conn->prepare("INSERT INTO employees (`firstname`) VALUES (?)");
-    $stmt->bind_param('s', $_POST['new-employee']);
-    $stmt->execute();
-    header('Location: ?path=employees');
-    die();
+    if (empty($_POST['new-employee'])) {
+        $msg = '<div style="color: red">Darbuotojo vardas negali būti tuščias</div>';
+    } else {
+        $stmt = $conn->prepare("INSERT INTO employees (`firstname`) VALUES (?)");
+        $stmt->bind_param('s', $_POST['new-employee']);
+        $stmt->execute();
+        header('Location: ?path=employees');
+        die();
+    }
 }
 
 // Delete employee logic
@@ -22,19 +27,27 @@ if (isset($_POST['delete'])) {
 }
 
 // Update employee logic
+if (isset($_POST['cancel'])) {
+    unset($_POST['update-project']);
+}
+
 if (isset($_POST['update-employee'])) {
-    if ($_POST['id-project'] == 0) {
-        $stmt = $conn->prepare("UPDATE employees SET firstname = ?, id_projects = NULL WHERE id_employees = ?");
-        $stmt->bind_param('si', $_POST['employee-name'], $_POST['update-employee']);
-        $stmt->execute();
-        header('Location: ?path=employees');
-        die();
+    if (empty($_POST['employee-name'])) {
+        $msg = '<div style="color: red">Darbuotojo vardas negali būti tuščias</div>';
     } else {
-        $stmt = $conn->prepare("UPDATE employees SET firstname = ?, id_projects = ? WHERE id_employees = ?");
-        $stmt->bind_param('sii', $_POST['employee-name'], $_POST['id-project'], $_POST['update-employee']);
-        $stmt->execute();
-        header('Location: ?path=employees');
-        die();
+        if ($_POST['id-project'] == 0) {
+            $stmt = $conn->prepare("UPDATE employees SET firstname = ?, id_projects = NULL WHERE id_employees = ?");
+            $stmt->bind_param('si', $_POST['employee-name'], $_POST['update-employee']);
+            $stmt->execute();
+            header('Location: ?path=employees');
+            die();
+        } else {
+            $stmt = $conn->prepare("UPDATE employees SET firstname = ?, id_projects = ? WHERE id_employees = ?");
+            $stmt->bind_param('sii', $_POST['employee-name'], $_POST['id-project'], $_POST['update-employee']);
+            $stmt->execute();
+            header('Location: ?path=employees');
+            die();
+        }
     }
 }
 ?>
@@ -69,13 +82,13 @@ if (isset($_POST['update-employee'])) {
     </tbody>
 </table>
 
-<form class="add-form" action="" method="POST">
-    <input type="text" name="new-employee" placeholder="Darbuotojo vardas"><br>
-    <button type="submit" class="btn btn-submit" name="add-employee" value="add-employee">Pridėti darbuotoją</button>
-</form>
-
 <?php
-if (isset($_POST['update'])) {
+if (!isset($_POST['update'])) {
+    echo '<form class="add-form" action="" method="POST">
+            <input type="text" name="new-employee" placeholder="Darbuotojo vardas"><br>
+            <button type="submit" class="btn btn-submit" name="add-employee" value="add-employee">Pridėti darbuotoją</button>
+         </form>';
+} else {
     $id_empl = $_POST['update'];
 
     $stmt = $conn->prepare("SELECT * FROM employees WHERE id_employees = ?");
@@ -112,6 +125,8 @@ if (isset($_POST['update'])) {
     }
     echo '</select><br>
             <button type="submit" class="btn btn-submit" name="update-employee" value="' . $id_empl . '">Atnaujinti duomenis</button>
+            <button type="submit" class="btn btn-cancel" name="cancel">Atšaukti</button>
             </form>';
 }
+echo $msg;
 ?>

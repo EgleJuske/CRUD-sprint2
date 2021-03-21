@@ -4,14 +4,19 @@ FROM projects
 LEFT JOIN employees ON projects.id_projects = employees.id_projects
 GROUP BY projects.id_projects";
 $result = mysqli_query($conn, $sql);
+$msg = '';
 
 // Add new project logic
 if (isset($_POST['add-project'])) {
-    $stmt = $conn->prepare("INSERT INTO projects (`project_name`) VALUES (?)");
-    $stmt->bind_param('s', $_POST['new-project']);
-    $stmt->execute();
-    header('Location: ?path=projects');
-    die();
+    if (empty($_POST['new-project'])) {
+        $msg = '<div style="color: red">Projekto pavadinimas negali būti tuščias</div>';
+    } else {
+        $stmt = $conn->prepare("INSERT INTO projects (`project_name`) VALUES (?)");
+        $stmt->bind_param('s', $_POST['new-project']);
+        $stmt->execute();
+        header('Location: ?path=projects');
+        die();
+    }
 }
 
 // Delete project logic
@@ -24,12 +29,21 @@ if (isset($_POST['delete'])) {
 }
 
 // Update project logic
+if (isset($_POST['cancel'])) {
+    unset($_POST['update-project']);
+}
+
 if (isset($_POST['update-project'])) {
-    $stmt = $conn->prepare("UPDATE projects SET project_name = ? WHERE id_projects = ?");
-    $stmt->bind_param('si', $_POST['project-name'], $_POST['update-project']);
-    $stmt->execute();
-    header('Location: ?path=projects');
-    die();
+    if ($_POST['project-name'] === '') {
+        $msg = '<div style="color: red">Projekto pavadinimas negali būti tuščias</div>';
+    } else {
+        echo 'project name' . $_POST['project-name'];
+        $stmt = $conn->prepare("UPDATE projects SET project_name = ? WHERE id_projects = ?");
+        $stmt->bind_param('si', $_POST['project-name'], $_POST['update-project']);
+        $stmt->execute();
+        header('Location: ?path=projects');
+        die();
+    }
 }
 
 ?>
@@ -63,20 +77,20 @@ if (isset($_POST['update-project'])) {
         ?>
     </tbody>
 </table>
-
-<form class="add-form" action="" method="POST">
-    <input type="text" name='new-project' placeholder="Projekto pavadinimas"><br>
-    <button type="submit" class="btn btn-submit" name="add-project" value="add-project">Pridėti projektą</button>
-</form>
-
 <?php
-if (isset($_POST['update'])) {
+if (!isset($_POST['update'])) {
+    echo '<form class="add-form" action="" method="POST">
+            <input type="text" name="new-project" placeholder="Projekto pavadinimas"><br>
+            <button type="submit" class="btn btn-submit" name="add-project" value="add-project">Pridėti projektą</button>
+        </form>';
+} else {
     $id = $_POST['update'];
     $stmt = $conn->prepare("SELECT * FROM projects WHERE id_projects = ?");
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
+
     if (mysqli_num_rows($result) > 0) {
         $row = $result->fetch_array();
         $project_name = $row['project_name'];
@@ -86,6 +100,8 @@ if (isset($_POST['update'])) {
                 <label for="pr-name">Projekto ID: ' . $id . '</label><br>
                 <input type="text" id="pr-name" name="project-name" value="' . $project_name . '"><br>
                 <button type="submit" class="btn btn-submit" name="update-project" value="' . $id . '">Atnaujinti duomenis</button>
+                <button type="submit" class="btn btn-cancel" name="cancel">Atšaukti</button>
             </form>';
 }
+echo $msg;
 ?>

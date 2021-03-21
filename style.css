@@ -110,3 +110,8 @@ select {
 	background-color: rgb(38, 119, 38);
 	margin-top: 10px;
 }
+
+.btn-cancel {
+	background-color: rgb(0, 92, 128);
+	margin-top: 10px;
+}
