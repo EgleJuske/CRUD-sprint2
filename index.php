@@ -39,6 +39,8 @@
         } else {
             include 'employees.php';
         }
+    } else {
+        echo '<img src="code_learning.jpg" alt="code-meme" title="code-meme">';
     }
     mysqli_close($conn);
     ?>
