@@ -12,7 +12,7 @@ if (isset($_POST['add-employee'])) {
         $stmt = $conn->prepare("INSERT INTO employees (`firstname`) VALUES (?)");
         $stmt->bind_param('s', $_POST['new-employee']);
         $stmt->execute();
-        header('Location: ?path=employees');
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '');
         die();
     }
 }
@@ -22,7 +22,7 @@ if (isset($_POST['delete'])) {
     $stmt = $conn->prepare("DELETE FROM employees WHERE id_employees = ?");
     $stmt->bind_param('i', $_POST['delete']);
     $stmt->execute();
-    header('Location: ?path=employees');
+    header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '');
     die();
 }
 
@@ -39,13 +39,13 @@ if (isset($_POST['update-employee'])) {
             $stmt = $conn->prepare("UPDATE employees SET firstname = ?, id_projects = NULL WHERE id_employees = ?");
             $stmt->bind_param('si', $_POST['employee-name'], $_POST['update-employee']);
             $stmt->execute();
-            header('Location: ?path=employees');
+            header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '');
             die();
         } else {
             $stmt = $conn->prepare("UPDATE employees SET firstname = ?, id_projects = ? WHERE id_employees = ?");
             $stmt->bind_param('sii', $_POST['employee-name'], $_POST['id-project'], $_POST['update-employee']);
             $stmt->execute();
-            header('Location: ?path=employees');
+            header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '');
             die();
         }
     }

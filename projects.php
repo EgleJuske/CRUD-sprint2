@@ -14,7 +14,7 @@ if (isset($_POST['add-project'])) {
         $stmt = $conn->prepare("INSERT INTO projects (`project_name`) VALUES (?)");
         $stmt->bind_param('s', $_POST['new-project']);
         $stmt->execute();
-        header('Location: ?path=projects');
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '');
         die();
     }
 }
@@ -24,7 +24,7 @@ if (isset($_POST['delete'])) {
     $stmt = $conn->prepare("DELETE FROM projects WHERE id_projects = ?");
     $stmt->bind_param('i', $_POST['delete']);
     $stmt->execute();
-    header('Location: ?path=projects');
+    header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '');
     die();
 }
 
@@ -41,7 +41,7 @@ if (isset($_POST['update-project'])) {
         $stmt = $conn->prepare("UPDATE projects SET project_name = ? WHERE id_projects = ?");
         $stmt->bind_param('si', $_POST['project-name'], $_POST['update-project']);
         $stmt->execute();
-        header('Location: ?path=projects');
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '');
         die();
     }
 }
